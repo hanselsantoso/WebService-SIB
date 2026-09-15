@@ -4,7 +4,6 @@
 
 Mata Kuliah Arsitektur Berbasis Layanan (SOA) · S1 Sistem Informasi Bisnis, ISTTS
 
-Ini tugas terpisah dari Latihan di [PANDUAN.md §19](PANDUAN.md#19-latihan).
 Bacaan konsep (connection pool, repository pattern, prepared statement,
 dua lapis validasi, dll di PANDUAN.md §10–§17) adalah BEKAL untuk
 mengerjakan tugas ini — bukan sesuatu yang diulang di sini.
@@ -120,23 +119,23 @@ Rancang path dan nama field JSON kalian sendiri (boleh Bahasa Indonesia
 seperti resource `buku`, atau Inggris — konsisten saja). Daftar di bawah ini
 FUNGSInya yang wajib ada, bukan nama URL pastinya:
 
-| Fungsi | Method | Contoh path | Catatan |
-|---|---|---|---|
-| Daftar kendaraan, bisa difilter | GET | `/kendaraan?status=&jenis=` | Sama gayanya dengan `?keyword=` di `buku` |
-| Detail satu kendaraan | GET | `/kendaraan/:id` | 404 kalau tidak ada |
-| Tambah kendaraan | POST | `/kendaraan` | Cek plat nomor kembar (aturan 1) |
-| Ubah data kendaraan | PUT/PATCH | `/kendaraan/:id` | Bebas pilih salah satu atau dua-duanya, dokumentasikan alasannya |
-| Hapus kendaraan | DELETE | `/kendaraan/:id` | Aturan 8 |
-| Daftar pelanggan | GET | `/pelanggan` | — |
-| Detail satu pelanggan | GET | `/pelanggan/:id` | 404 kalau tidak ada |
-| Tambah pelanggan | POST | `/pelanggan` | Cek KTP kembar (aturan 2) |
-| Hapus pelanggan | DELETE | `/pelanggan/:id` | Aturan 9 |
-| Buat transaksi sewa baru | POST | `/transaksi` | Aturan 3, 4, 5, 10 |
-| Daftar transaksi, bisa difilter | GET | `/transaksi?status=&kendaraan_id=&pelanggan_id=` | — |
-| Detail satu transaksi | GET | `/transaksi/:id` | 404 kalau tidak ada |
-| **Kembalikan** kendaraan (aksi) | — | rancang sendiri | Aturan 6, 7, 10 |
-| **Batalkan** transaksi (aksi) | — | rancang sendiri | Aturan 7 |
-| Statistik ringkas | GET | `/transaksi/statistik` | Minimal: jumlah transaksi per status, total pendapatan dari transaksi selesai. Ingat urutan route (§6)! |
+| Fungsi                          | Method    | Contoh path                                      | Catatan                                                                                                 |
+| ------------------------------- | --------- | ------------------------------------------------ | ------------------------------------------------------------------------------------------------------- |
+| Daftar kendaraan, bisa difilter | GET       | `/kendaraan?status=&jenis=`                      | Sama gayanya dengan `?keyword=` di `buku`                                                               |
+| Detail satu kendaraan           | GET       | `/kendaraan/:id`                                 | 404 kalau tidak ada                                                                                     |
+| Tambah kendaraan                | POST      | `/kendaraan`                                     | Cek plat nomor kembar (aturan 1)                                                                        |
+| Ubah data kendaraan             | PUT/PATCH | `/kendaraan/:id`                                 | Bebas pilih salah satu atau dua-duanya, dokumentasikan alasannya                                        |
+| Hapus kendaraan                 | DELETE    | `/kendaraan/:id`                                 | Aturan 8                                                                                                |
+| Daftar pelanggan                | GET       | `/pelanggan`                                     | —                                                                                                       |
+| Detail satu pelanggan           | GET       | `/pelanggan/:id`                                 | 404 kalau tidak ada                                                                                     |
+| Tambah pelanggan                | POST      | `/pelanggan`                                     | Cek KTP kembar (aturan 2)                                                                               |
+| Hapus pelanggan                 | DELETE    | `/pelanggan/:id`                                 | Aturan 9                                                                                                |
+| Buat transaksi sewa baru        | POST      | `/transaksi`                                     | Aturan 3, 4, 5, 10                                                                                      |
+| Daftar transaksi, bisa difilter | GET       | `/transaksi?status=&kendaraan_id=&pelanggan_id=` | —                                                                                                       |
+| Detail satu transaksi           | GET       | `/transaksi/:id`                                 | 404 kalau tidak ada                                                                                     |
+| **Kembalikan** kendaraan (aksi) | —         | rancang sendiri                                  | Aturan 6, 7, 10                                                                                         |
+| **Batalkan** transaksi (aksi)   | —         | rancang sendiri                                  | Aturan 7                                                                                                |
+| Statistik ringkas               | GET       | `/transaksi/statistik`                           | Minimal: jumlah transaksi per status, total pendapatan dari transaksi selesai. Ingat urutan route (§6)! |
 
 Untuk dua baris "rancang sendiri": pikirkan baik-baik apakah ini `PUT`,
 `PATCH`, `POST` ke sub-path, atau sesuatu yang lain. Tidak ada satu jawaban
@@ -181,13 +180,13 @@ jelaskan, sama seperti diskusi PUT vs PATCH di §8.
 
 ## Kriteria penilaian
 
-| Kriteria | Bobot | Nilai penuh berarti |
-|---|---|---|
-| Kebenaran aturan bisnis (10 aturan di atas) | 35% | Semua status code & efek sampingnya (perubahan status kendaraan, perhitungan denda) benar |
-| Desain API & konsistensi | 20% | Nama resource, method, status code konsisten dengan pola `buku`; keputusan desain (endpoint aksi, PUT vs PATCH) masuk akal & terdokumentasi |
-| Struktur & keamanan kode | 20% | Repository pattern, prepared statement di semua query, tidak ada mass assignment (termasuk field terhitung) |
-| Koleksi Postman | 15% | Semua 10 aturan bisnis teruji, assertion jelas, jalan hijau lewat Runner |
-| Dokumentasi asumsi | 10% | Asumsi yang diambil masuk akal dan dijelaskan alasannya, bukan sekadar "terserah saya" |
+| Kriteria                                    | Bobot | Nilai penuh berarti                                                                                                                         |
+| ------------------------------------------- | ----- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| Kebenaran aturan bisnis (10 aturan di atas) | 35%   | Semua status code & efek sampingnya (perubahan status kendaraan, perhitungan denda) benar                                                   |
+| Desain API & konsistensi                    | 20%   | Nama resource, method, status code konsisten dengan pola `buku`; keputusan desain (endpoint aksi, PUT vs PATCH) masuk akal & terdokumentasi |
+| Struktur & keamanan kode                    | 20%   | Repository pattern, prepared statement di semua query, tidak ada mass assignment (termasuk field terhitung)                                 |
+| Koleksi Postman                             | 15%   | Semua 10 aturan bisnis teruji, assertion jelas, jalan hijau lewat Runner                                                                    |
+| Dokumentasi asumsi                          | 10%   | Asumsi yang diambil masuk akal dan dijelaskan alasannya, bukan sekadar "terserah saya"                                                      |
 
 ### Yang mengurangi nilai
 
