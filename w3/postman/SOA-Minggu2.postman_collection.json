@@ -2,7 +2,7 @@
   "info": {
     "_postman_id": "1bb55b0a-31d6-4534-a88a-671ca118bb15",
     "name": "SOA Minggu 2 - REST Service Dasar",
-    "description": "Praktikum 1. Jalankan berurutan lewat Runner.\n\nBaseUrl diatur di environment `local`.",
+    "description": "# SOA Minggu 3 — Koleksi Praktikum (Buku & Karakter)\n\nKoleksi ini dites terhadap dua versi backend yang **endpoint-nya identik**:\nMinggu 2 (data array di memori) dan Minggu 3 (data MySQL). Kalau kalian baru\nmulai dari Minggu 3, langsung `npm run db:migrate` lalu jalankan koleksi ini —\ntidak perlu tahu versi array-nya sama sekali.\n\n## Cara pakai\n\n1. Pilih environment **local** (pojok kanan atas Postman) — ini yang mengisi `{{baseUrl}}`.\n2. Klik collection ini → **Run** (Runner) → jalankan SEMUA folder berurutan dari atas ke bawah.\n   Urutan penting: folder \"2 - Buku: tulis\" membuat sebuah buku baru lalu MENGHAPUSNYA\n   lagi di akhir, dan request-request di dalamnya saling bergantung lewat variabel `{{bukuId}}`.\n3. Hasil yang benar: **28 request, 49 assertion, semuanya hijau.**\n\n## Tiga tempat data masuk (ringkasan — detail lengkap di PANDUAN.md §3)\n\n| Sumber | Contoh di koleksi ini | Kapan dipakai |\n|---|---|---|\n| **Query** (`req.query`) | `?keyword=potter`, `?sort=harga&order=desc` | Filter, cari, urutkan, paging — semuanya OPSIONAL |\n| **Path Param** (`req.params`) | `/buku/1`, `/buku/{{bukuId}}/karakter/2` | MENUNJUK resource yang mana — WAJIB, bagian dari identitas |\n| **Body** (`req.body`) | JSON di tab Body pada request POST/PUT/PATCH | Data yang dibuat/diubah |\n\n## Pemetaan CRUD → HTTP method (resource `buku`)\n\n| Operasi | Method | Contoh URL | Folder |\n|---|---|---|---|\n| **C**reate | `POST` | `/api/v1/buku` | 2 - Buku: tulis |\n| **R**ead (banyak) | `GET` | `/api/v1/buku?keyword=...` | 1 - Buku: baca |\n| **R**ead (satu) | `GET` | `/api/v1/buku/:bukuId` | 1 - Buku: baca |\n| **U**pdate (seluruh) | `PUT` | `/api/v1/buku/:bukuId` | 2 - Buku: tulis |\n| **U**pdate (sebagian) | `PATCH` | `/api/v1/buku/:bukuId` | 2 - Buku: tulis |\n| **D**elete | `DELETE` | `/api/v1/buku/:bukuId` | 2 - Buku: tulis |\n\n## Status code yang dipakai, dan kapan\n\n| Code | Arti di API ini |\n|---|---|\n| `200` | Berhasil — GET, PUT, PATCH, DELETE. Termasuk daftar/hasil pencarian KOSONG. |\n| `201` | Berhasil membuat resource baru (POST) — cek header `Location`. |\n| `400` | Body/format salah — validasi gagal, atau body kosong saat wajib ada isi. |\n| `404` | Resource yang DIMINTA SECARA SPESIFIK tidak ada (id salah, alamat salah). |\n| `405` | Alamatnya ADA, tapi method-nya tidak diizinkan di situ. Cek header `Allow`. |\n| `409` | Data valid, tapi BENTROK dengan yang sudah ada (judul kembar). |\n\n## Variabel `{{bukuId}}`\n\nRequest **\"Tambah buku\"** di folder \"2 - Buku: tulis\" menyimpan `id` dari\nresponse-nya ke variabel collection `bukuId` lewat script Tests:\n```js\npm.collectionVariables.set('bukuId', pm.response.json().id);\n```\nSemua request setelahnya di folder itu (PUT, PATCH, DELETE, dan cek 404) memakai\n`{{bukuId}}` di URL-nya — bukan angka `1` yang ditulis manual. Ini kenapa\nurutan menjalankan request PENTING: kalau \"Tambah buku\" belum pernah dijalankan,\n`{{bukuId}}` kosong dan request sesudahnya akan memanggil `/buku/` (tanpa id).\n",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
@@ -47,7 +47,7 @@
                 }
               ]
             },
-            "description": "Menunjukkan tiga jebakan string dari HTTP."
+            "description": "**GET** `/api/v1/contoh?nama=jojo&umur=40&min=100&max=45`\n\n**Query:** `nama`, `umur`, `min`, `max` — semuanya opsional, dibaca lewat `req.query`.\n\nTujuan: membuktikan **semua nilai dari `req.query` adalah string**, walau terlihat seperti angka di URL. Perhatikan response `tipe_umur` (selalu `\"string\"`) dan bandingkan `a_penjumlahan.salah` vs `.benar`."
           },
           "event": [
             {
@@ -85,7 +85,7 @@
                 "jk"
               ]
             },
-            "description": "Parameter :jk? opsional."
+            "description": "**GET** `/api/v1/contoh/jojo/umur/40/jk`\n\n**Path Param:** `nama` = `jojo`, `umur` = `40`, `jk` = *(tidak diisi — parameter `:jk?` ini opsional)*.\n\nTujuan: parameter path yang diakhiri `?` (`:jk?`) boleh tidak ada di URL. Response `jk` akan berisi nilai default `\"Tidak Tahu\"`."
           },
           "event": [
             {
@@ -129,7 +129,8 @@
                   "language": "json"
                 }
               }
-            }
+            },
+            "description": "**POST** `/api/v1/contoh`\n\n**Body (raw JSON):**\n```json\n{ \"nama\": \"jojo\", \"umur\": 40, \"jk\": \"L\" }\n```\n\nTujuan: `req.body` hanya terisi kalau (a) `express.json()` terpasang di `index.js`, dan (b) tab Body di Postman diset **raw → JSON**, bukan **Text**."
           },
           "event": [
             {
@@ -159,7 +160,8 @@
               "path": [
                 "contoh"
               ]
-            }
+            },
+            "description": "**POST** `/api/v1/contoh`\n\n**Body:** sengaja KOSONG (tab Body pada request ini tidak diisi).\n\nTujuan: controller menolak body kosong dengan `400`, dan pesan errornya memandu memeriksa dua penyebab paling umum — lihat `src/controllers/contoh.js`."
           },
           "event": [
             {
@@ -187,7 +189,8 @@
                 "contoh",
                 "array-function"
               ]
-            }
+            },
+            "description": "**GET** `/api/v1/contoh/array-function`\n\n**Query / Path / Body:** tidak ada — endpoint ini murni demonstrasi.\n\nTujuan: review `map`, `find`, `filter`, `reduce` sebelum dipakai di controller buku. Kalau salah satu dari empat ini belum lancar, baca respons endpoint ini dulu sebelum lanjut ke folder \"1 - Buku: baca\"."
           },
           "event": [
             {
@@ -201,7 +204,8 @@
             }
           ]
         }
-      ]
+      ],
+      "description": "**Bukan bagian dari resource `buku`.** Ini \"laboratorium\" endpoint `/api/v1/contoh` untuk merasakan bedanya `req.query`, `req.params`, dan `req.body` sebelum masuk ke controller buku yang memakai ketiganya sekaligus. Kalau konsep tiga sumber data ini belum jelas, buku-buku di folder lain akan terasa membingungkan.\n\nLihat `src/controllers/contoh.js` sambil menjalankan tiap request di folder ini."
     },
     {
       "name": "1 - Buku: baca",
@@ -219,7 +223,8 @@
               "path": [
                 "buku"
               ]
-            }
+            },
+            "description": "**GET** `/api/v1/buku`\n\n**Query / Path Param:** tidak ada — ini bentuk PALING DASAR, tanpa filter apa pun.\n\nEkspektasi: `200`, body berisi `{ total, limit, offset, data: [...] }`. `data` berisi field RINGKAS saja (id, judul, penulis, harga, stok) — bukan objek lengkap dengan `karakter`."
           },
           "event": [
             {
@@ -257,7 +262,8 @@
                   "value": "potter"
                 }
               ]
-            }
+            },
+            "description": "**GET** `/api/v1/buku?keyword=potter`\n\n**Query:** `keyword` — dicocokkan (case-insensitive, substring) ke `judul` ATAU `penulis`.\n\nEkspektasi: `200`, `total` bernilai `1` (cuma \"Harry Potter and the Philosopher's Stone\" yang cocok)."
           },
           "event": [
             {
@@ -294,7 +300,7 @@
                 }
               ]
             },
-            "description": "PENTING: daftar kosong BUKAN error. 200 dengan array kosong, bukan 404."
+            "description": "**GET** `/api/v1/buku?keyword=zzzz`\n\n**Query:** `keyword` — sengaja diisi sesuatu yang pasti tidak ada.\n\n**PENTING:** daftar kosong BUKAN error. Ekspektasi tetap `200` dengan `data: []`, BUKAN `404`. Bandingkan dengan request \"Buku tidak ada -> 404\" di bawah, yang memakai path param, bukan query — itu yang membuat hasilnya `404`, bukan sifat \"tidak ketemu\"-nya."
           },
           "event": [
             {
@@ -338,7 +344,8 @@
                   "value": "2"
                 }
               ]
-            }
+            },
+            "description": "**GET** `/api/v1/buku?sort=harga&order=desc&limit=2`\n\n**Query:**\n- `sort` — nama kolom, HARUS ada di whitelist (`id`, `judul`, `harga`, `tahun_terbit`, `stok`)\n- `order` — `asc` (default) atau `desc`\n- `limit` — jumlah maksimal hasil per halaman\n- `offset` — (tidak dipakai di request ini) mulai dari baris ke berapa\n\nEkspektasi: `200`, `data.length` persis `2`, dan `data[0].harga >= data[1].harga` (urut menurun berdasarkan harga)."
           },
           "event": [
             {
@@ -374,7 +381,7 @@
                 "statistik"
               ]
             },
-            "description": "Route ini harus dideklarasikan SEBELUM /:bukuId. Kalau 404, urutannya salah."
+            "description": "**GET** `/api/v1/buku/statistik`\n\n**Query / Path Param:** tidak ada.\n\nRoute ini HARUS dideklarasikan di `routes/buku.js` SEBELUM `/:bukuId`. Kalau urutannya terbalik, Express mencocokkan `\"statistik\"` sebagai NILAI `bukuId` dan request ini berakhir `404` yang membingungkan. Ekspektasi di sini: `200`."
           },
           "event": [
             {
@@ -404,7 +411,8 @@
                 "buku",
                 "1"
               ]
-            }
+            },
+            "description": "**GET** `/api/v1/buku/1`\n\n**Path Param:** `bukuId` = `1` — MENUNJUK satu resource spesifik.\n\nEkspektasi: `200`, dan (beda dengan \"Daftar buku\") response berupa objek LENGKAP satu buku, termasuk array `karakter`-nya."
           },
           "event": [
             {
@@ -435,7 +443,8 @@
                 "buku",
                 "999"
               ]
-            }
+            },
+            "description": "**GET** `/api/v1/buku/999`\n\n**Path Param:** `bukuId` = `999` — id yang sengaja tidak ada di data.\n\nEkspektasi: `404`. Bandingkan dengan \"Keyword tidak ketemu -> tetap 200\" di atas: bedanya PATH PARAM menunjuk satu resource spesifik yang tidak ada (404), sedangkan QUERY yang tidak menemukan apa pun tetap daftar kosong yang valid (200)."
           },
           "event": [
             {
@@ -464,7 +473,8 @@
                 "1",
                 "karakter"
               ]
-            }
+            },
+            "description": "**GET** `/api/v1/buku/1/karakter`\n\n**Path Param:** `bukuId` = `1`. `karakterId` TIDAK diisi (nested resource, parameter `:karakterId?` opsional — lihat routes/buku.js).\n\nEkspektasi: `200`, response berisi SEMUA karakter milik buku 1 dalam bentuk `{ buku_id, judul, total, data: [...] }`."
           },
           "event": [
             {
@@ -494,7 +504,8 @@
                 "karakter",
                 "2"
               ]
-            }
+            },
+            "description": "**GET** `/api/v1/buku/1/karakter/2`\n\n**Path Param:** `bukuId` = `1`, `karakterId` = `2` — dua level path param sekaligus, karena karakter tidak punya arti tanpa buku induknya (nested resource).\n\nEkspektasi: `200`, response berupa SATU objek karakter saja (bukan array)."
           },
           "event": [
             {
@@ -525,7 +536,7 @@
                 "99"
               ]
             },
-            "description": "Pesan errornya harus BEDA dengan 'buku tidak ditemukan'."
+            "description": "**GET** `/api/v1/buku/1/karakter/99`\n\n**Path Param:** `bukuId` = `1` (ADA), `karakterId` = `99` (TIDAK ADA).\n\nEkspektasi: `404`, dengan pesan yang menyebut \"karakter\" — BEDA dengan pesan \"buku tidak ditemukan\". Ada dua kemungkinan 404 di endpoint nested seperti ini (buku-nya tidak ada, atau buku-nya ada tapi karakternya tidak), dan consumer API perlu bisa membedakan keduanya dari pesannya."
           },
           "event": [
             {
@@ -542,7 +553,8 @@
             }
           ]
         }
-      ]
+      ],
+      "description": "Semua request di sini **GET** — tidak mengubah data apa pun, aman dijalankan berkali-kali dan dalam urutan apa saja. Fokus folder ini: kombinasi `?query` untuk filter/urut/paging, dan `:param` di path untuk menunjuk satu resource atau resource bersarang (`karakter`).\n\n| Request | Query | Path Param |\n|---|---|---|\n| Daftar buku | — | — |\n| Cari keyword | `keyword` | — |\n| Sort + paging | `sort`, `order`, `limit` | — |\n| Satu buku | — | `bukuId` |\n| Karakter buku | — | `bukuId` |\n| Satu karakter | — | `bukuId`, `karakterId` |"
     },
     {
       "name": "2 - Buku: tulis",
@@ -574,7 +586,8 @@
                   "language": "json"
                 }
               }
-            }
+            },
+            "description": "**POST** `/api/v1/buku`\n\n**Body (raw JSON) — semua field WAJIB kecuali `stok`:**\n```json\n{\n  \"judul\": \"Dune\",\n  \"penulis\": \"Frank Herbert\",\n  \"tahun_terbit\": 1965,\n  \"harga\": 150000,\n  \"stok\": 5,\n  \"kategori\": \"novel\"\n}\n```\n\nEkspektasi: `201 Created` + header **Location** berisi `/api/v1/buku/<id baru>`. Script Tests pada request ini menyimpan `id` dari response ke variabel collection `{{bukuId}}`, dipakai oleh SEMUA request setelah ini di folder ini."
           },
           "event": [
             {
@@ -611,7 +624,7 @@
                 "buku"
               ]
             },
-            "description": "Datanya valid, tapi bentrok dengan yang sudah ada. 409 Conflict, bukan 400.",
+            "description": "**POST** `/api/v1/buku`\n\n**Body:** SAMA PERSIS dengan \"Tambah buku\" (judul \"Dune\" lagi).\n\nEkspektasi: `409 Conflict` — BUKAN `400`. Data yang dikirim valid secara format, tapi bentrok dengan buku yang judulnya sudah ada (dibuat oleh request sebelumnya). `400` untuk \"data salah bentuk\", `409` untuk \"data benar tapi bentrok dengan state server\".",
             "body": {
               "mode": "raw",
               "raw": "{\n  \"judul\": \"Dune\",\n  \"penulis\": \"Frank Herbert\",\n  \"tahun_terbit\": 1965,\n  \"harga\": 150000,\n  \"stok\": 5,\n  \"kategori\": \"novel\"\n}",
@@ -653,7 +666,7 @@
                 "buku"
               ]
             },
-            "description": "Empat field salah. Harus dilaporkan SEMUA, bukan satu per satu.",
+            "description": "**POST** `/api/v1/buku`\n\n**Body — sengaja rusak di banyak field sekaligus:**\n```json\n{\n  \"judul\": \"ab\",\n  \"tahun_terbit\": 1800,\n  \"harga\": \"mahal\",\n  \"kategori\": \"majalah\"\n}\n```\nRusak di mana: `judul` kurang dari 3 karakter, `penulis` tidak dikirim sama sekali, `tahun_terbit` di bawah minimum 1900, `harga` bukan angka, `kategori` bukan salah satu nilai yang diizinkan.\n\nEkspektasi: `400`, dan `errors` berisi **minimal 4 field sekaligus** — bukan berhenti di kesalahan pertama yang ditemukan.",
             "body": {
               "mode": "raw",
               "raw": "{\n  \"judul\": \"ab\",\n  \"tahun_terbit\": 1800,\n  \"harga\": \"mahal\",\n  \"kategori\": \"majalah\"\n}",
@@ -703,7 +716,7 @@
                 "buku"
               ]
             },
-            "description": "Field isAdmin dan diskon tidak ada di aturan validasi, jadi harus dibuang.",
+            "description": "**POST** `/api/v1/buku`\n\n**Body — field valid DITAMBAH dua field yang tidak seharusnya ada:**\n```json\n{\n  \"judul\": \"Buku Penyusup\",\n  \"penulis\": \"Penyerang\",\n  \"tahun_terbit\": 2020,\n  \"harga\": 1,\n  \"kategori\": \"novel\",\n  \"isAdmin\": true,\n  \"diskon\": 100\n}\n```\n\nEkspektasi: `201` (datanya valid), TAPI response TIDAK boleh punya property `isAdmin` atau `diskon`. Ini bukti bahwa server membangun ulang objek dari field yang diizinkan saja (`value` hasil `validate()`), bukan menyalin `req.body` mentah-mentah — pertahanan terhadap **mass assignment** (OWASP API Security Top 10).",
             "body": {
               "mode": "raw",
               "raw": "{\n  \"judul\": \"Buku Penyusup\",\n  \"penulis\": \"Penyerang\",\n  \"tahun_terbit\": 2020,\n  \"harga\": 1,\n  \"kategori\": \"novel\",\n  \"isAdmin\": true,\n  \"diskon\": 100\n}",
@@ -760,7 +773,8 @@
                   "language": "json"
                 }
               }
-            }
+            },
+            "description": "**PUT** `/api/v1/buku/{{bukuId}}`\n\n**Path Param:** `bukuId` = *(dari \"Tambah buku\")*.\n\n**Body — SEMUA field wajib dikirim, PUT = ganti total:**\n```json\n{\n  \"judul\": \"Dune Messiah\",\n  \"penulis\": \"Frank Herbert\",\n  \"tahun_terbit\": 1969,\n  \"harga\": 160000,\n  \"stok\": 3,\n  \"kategori\": \"novel\"\n}\n```\n\nEkspektasi: `200`, `judul` di response sudah berganti. Field yang tidak dikirim di body PUT akan HILANG/ternilai ulang — beda dengan PATCH di bawah."
           },
           "event": [
             {
@@ -797,7 +811,7 @@
                 "{{bukuId}}"
               ]
             },
-            "description": "PUT mengganti SELURUHNYA, jadi semua field wajib.",
+            "description": "**PUT** `/api/v1/buku/{{bukuId}}`\n\n**Body — sengaja cuma satu field:**\n```json\n{ \"judul\": \"Cuma Judul\" }\n```\n\nEkspektasi: `400`. PUT menuntut representasi LENGKAP resource; mengirim sebagian saja dianggap data tidak lengkap, bukan \"update sebagian\" (itu tugas PATCH).",
             "body": {
               "mode": "raw",
               "raw": "{\n  \"judul\": \"Cuma Judul\"\n}",
@@ -840,7 +854,7 @@
                 "{{bukuId}}"
               ]
             },
-            "description": "Hanya harga yang dikirim. Field lain harus tetap utuh.",
+            "description": "**PATCH** `/api/v1/buku/{{bukuId}}`\n\n**Body — cuma field yang mau diubah:**\n```json\n{ \"harga\": 175000 }\n```\n\nEkspektasi: `200`, `harga` berubah jadi `175000`, TAPI field lain (`penulis`, dst) tetap sama seperti sebelumnya — inilah beda utama PATCH dengan PUT.",
             "body": {
               "mode": "raw",
               "raw": "{\n  \"harga\": 175000\n}",
@@ -883,7 +897,8 @@
                 "buku",
                 "{{bukuId}}"
               ]
-            }
+            },
+            "description": "**PATCH** `/api/v1/buku/{{bukuId}}`\n\n**Body:** sengaja KOSONG.\n\nEkspektasi: `400`. PATCH dengan body kosong berarti \"ubah tidak ada apa-apa\" — itu bukan request yang masuk akal, jadi ditolak sebelum menyentuh data."
           },
           "event": [
             {
@@ -911,7 +926,8 @@
                 "buku",
                 "{{bukuId}}"
               ]
-            }
+            },
+            "description": "**DELETE** `/api/v1/buku/{{bukuId}}`\n\n**Path Param:** `bukuId` = *(dari \"Tambah buku\")*. **Body:** tidak ada.\n\nEkspektasi: `200` dengan pesan konfirmasi. (Alternatif yang juga REST-ful: `204 No Content` tanpa body — lihat catatan di `controllers/buku.js`.)"
           },
           "event": [
             {
@@ -939,7 +955,8 @@
                 "buku",
                 "{{bukuId}}"
               ]
-            }
+            },
+            "description": "**GET** `/api/v1/buku/{{bukuId}}`\n\n**Path Param:** `bukuId` = id yang BARU SAJA dihapus request sebelumnya.\n\nEkspektasi: `404` — membuktikan DELETE sebelumnya benar-benar menghapus data di database, bukan cuma mengembalikan response sukses palsu."
           },
           "event": [
             {
@@ -953,7 +970,8 @@
             }
           ]
         }
-      ]
+      ],
+      "description": "Request di sini **mengubah data** (POST/PUT/PATCH/DELETE) — urutannya SENGAJA dan TIDAK BOLEH diacak. Alurnya: buat satu buku baru (\"Tambah buku\", id-nya tersimpan ke `{{bukuId}}`) → uji aturan bisnis di atasnya (duplikat, validasi, mass assignment) → ganti seluruhnya (PUT) → ganti sebagian (PATCH) → hapus (DELETE) → buktikan sudah benar-benar hilang (GET → 404).\n\nBody setiap request ada di tab **Body → raw → JSON**. Kalau di Postman kalian tab Body masih \"Text\", ganti dulu ke \"JSON\" sebelum mengirim — ini penyebab `req.body` kosong nomor satu.\n\n| Request | Method | Path Param | Body wajib diisi |\n|---|---|---|---|\n| Tambah buku | POST | — | judul, penulis, tahun_terbit, harga, kategori |\n| Tambah duplikat -> 409 | POST | — | sama persis dengan \"Tambah buku\" |\n| Validasi gagal -> semua error sekaligus | POST | — | sengaja rusak (lihat body) |\n| Mass assignment ditolak | POST | — | field valid + `isAdmin`, `diskon` (harus dibuang) |\n| PUT ganti seluruhnya | PUT | `bukuId` | SEMUA field (PUT = ganti total) |\n| PUT tidak lengkap -> 400 | PUT | `bukuId` | sengaja cuma `judul` |\n| PATCH sebagian | PATCH | `bukuId` | cuma `harga` |\n| PATCH body kosong -> 400 | PATCH | `bukuId` | sengaja kosong |\n| Hapus buku | DELETE | `bukuId` | — |\n| Cek sudah terhapus -> 404 | GET | `bukuId` | — |"
     },
     {
       "name": "3 - Method routing & 405",
@@ -972,7 +990,7 @@
                 "buku"
               ]
             },
-            "description": "Alamat /buku ADA, tapi DELETE tidak diizinkan. 405, bukan 404."
+            "description": "**DELETE** `/api/v1/buku` *(tanpa `:bukuId` — alamat KOLEKSI, bukan satu resource)*\n\nEkspektasi: `405 Method Not Allowed` + header **Allow** berisi daftar method yang boleh (`GET, POST`). BUKAN `404` — alamat `/api/v1/buku` jelas ada, cuma `DELETE` di alamat itu (menghapus SELURUH koleksi) sengaja tidak diizinkan."
           },
           "event": [
             {
@@ -1004,7 +1022,8 @@
                 "buku",
                 "1"
               ]
-            }
+            },
+            "description": "**POST** `/api/v1/buku/1` *(path param `bukuId` = `1`, tapi POST tidak didaftarkan di alamat SATU resource — POST hanya untuk alamat koleksi)*\n\nEkspektasi: `405`. Untuk membuat resource baru, kirim POST ke `/api/v1/buku` (tanpa id) — id ditentukan server, bukan client."
           },
           "event": [
             {
@@ -1032,7 +1051,7 @@
                 "tidak-ada"
               ]
             },
-            "description": "Bandingkan dengan 405 di atas: di sini ALAMATNYA yang tidak ada."
+            "description": "**GET** `/api/v1/tidak-ada` *(alamat yang memang tidak pernah didaftarkan di routes manapun)*\n\nEkspektasi: `404` bukan `405` (bandingkan dua request di atas), dan `Content-Type` response tetap JSON — bukan halaman HTML error bawaan Express."
           },
           "event": [
             {
@@ -1049,7 +1068,8 @@
             }
           ]
         }
-      ]
+      ],
+      "description": "Tiga request ini membandingkan **404 vs 405** — dua status yang gampang tertukar.\n\n- `404` = alamatnya TIDAK ADA.\n- `405` = alamatnya ADA, tapi method yang kalian pakai tidak didukung di situ.\n\nPerhatikan header **Allow** di response 405 — RFC 9110 mewajibkan server menyebutkan method apa saja yang seharusnya boleh dipakai di alamat itu."
     }
   ]
 }
