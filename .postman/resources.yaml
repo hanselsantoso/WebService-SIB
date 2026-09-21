@@ -1,9 +1,0 @@
-# Use this workspace to collaborate
-workspace:
-  id: a0446fb3-db43-4a51-a566-5647f2113582
-
-localResources:
-  collections:
-    - ../w2/postman/SOA-Minggu2.postman_collection.json
-  environments:
-    - ../w2/postman/local.postman_environment.json

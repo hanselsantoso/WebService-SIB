@@ -1,16 +1,16 @@
 {
-  "name": "w1",
+  "name": "soa-minggu1",
   "version": "1.0.0",
-  "description": "",
+  "description": "Demo Minggu 1 - Pengantar Web Service & Review JavaScript",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js",
+    "dev": "nodemon index.js"
   },
-  "keywords": [],
-  "author": "",
+  "engines": { "node": "24.x" },
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-    "express": "^5.2.1"
+    "express": "^4.22.3"
   }
 }

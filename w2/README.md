@@ -50,7 +50,9 @@ Method lain pada path di atas menghasilkan **405** beserta header `Allow`.
 
 ## Panduan lengkap
 
-Baca **[PANDUAN.md](PANDUAN.md)** — penjelasan konsep, best practice, dan Latihan 1–8.
+Baca **[PANDUAN.md](PANDUAN.md)** — penjelasan konsep dan best practice.
+
+Latihan dan tugas yang dikumpulkan ada di **[TUGAS.md](TUGAS.md)**.
 
 ## Catatan versi
 

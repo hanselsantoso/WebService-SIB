@@ -58,14 +58,17 @@ Method lain pada path di atas menghasilkan **405** beserta header `Allow`.
 
 Baca **[PANDUAN.md](PANDUAN.md)** — konsep REST/Express, migrasi ke MySQL
 (install, `npm run db:migrate`, pool koneksi, repository pattern, prepared
-statement/SQL Injection, dst), dan Latihan 1–8.
+statement/SQL Injection, dst).
+
+Latihan dan tugas yang dikumpulkan ada di **[TUGAS.md](TUGAS.md)**.
 
 ## Tugas yang dikumpulkan
 
-**[TUGAS-RENTAL.md](TUGAS-RENTAL.md)** — studi kasus CV Wira Jaya Rental:
+**Studi kasus CV Wira Jaya Rental** — [TUGAS-RENTAL.md](TUGAS-RENTAL.md):
 klien minta backend REST API buat bisnis rental kendaraan mereka. Resource
 dan aturan bisnis baru, di luar `buku`/`penulis`, untuk membuktikan kalian
-paham POLA-nya (bukan cuma hafal kodenya).
+paham POLA-nya (bukan cuma hafal kodenya). Soal lengkap + kriteria penilaian
+ada di file itu.
 
 ## Catatan versi
 
