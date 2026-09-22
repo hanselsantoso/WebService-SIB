@@ -1,0 +1,21 @@
+{
+  "name": "soa-minggu4",
+  "version": "1.0.0",
+  "description": "Starter Praktikum Minggu 4 - ORM Sequelize",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "db:migrate": "node scripts/migrate.js"
+  },
+  "engines": {
+    "node": "24.x"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.21.2",
+    "mysql2": "^3.24.4",
+    "sequelize": "^6.37.8"
+  }
+}
