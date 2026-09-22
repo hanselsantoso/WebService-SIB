@@ -3,3 +3,13 @@ node_modules/
 .DS_Store
 dosen/
 .postman/
+
+# Metadata workspace Postman desktop — dibuat ulang otomatis oleh aplikasi,
+# tidak relevan untuk repo (koleksi yang di-commit hanya file JSON export).
+.postman/
+**/.postman/
+**/.resources/
+**/*.request.yaml
+**/*.environment.yaml
+**/workspace.globals.yaml
+**/postman/postman/

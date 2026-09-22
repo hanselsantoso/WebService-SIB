@@ -6,6 +6,27 @@ Ong, Hansel Santoso, S.Si., M.Kom.
 Repository starter praktikum per minggu. Stack: Express, MySQL
 (`mysql2/promise`, Sequelize menyusul), Postman.
 
+## Untuk mahasiswa — repo ini hanya-baca untuk kalian
+
+Repo ini berisi **materi dan starter project**. Kalian tidak bisa (dan
+tidak perlu) commit/push ke sini — cukup `pull` untuk mendapat materi
+terbaru:
+
+```bash
+git clone https://github.com/hanselsantoso/WebService-SIB.git
+# update materi di minggu-minggu berikutnya:
+git pull
+```
+
+Pekerjaan praktikum kalian **disimpan di repository sendiri**
+(`soa-prak<N>-<NRP>`, lihat instruksi di `TUGAS.md` tiap minggu). Cara
+termudah: buat repo kosong di GitHub atas nama kalian, lalu salin folder
+minggu yang dikerjakan ke dalamnya dan push ke sana. Koleksi Postman dan
+jawaban latihan ikut di-commit di repo kalian sendiri — **bukan** di sini.
+
+Dua hal yang tidak pernah masuk git, termasuk di repo kalian sendiri:
+`node_modules/` dan `.env`.
+
 ## Isi tiap folder minggu
 
 Setiap folder minggu (`w1`, `w2`, ...) punya struktur yang sama:
