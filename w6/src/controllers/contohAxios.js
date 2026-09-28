@@ -25,7 +25,13 @@
 const axios = require("axios");
 const { kirimNotifikasi } = require("../utils/notifikasi");
 
-const UPSTREAM = "https://api.jikan.moe/v4/anime";
+/**
+ * Upstream bisa dioverride lewat .env (UPSTREAM_ANIME=...) --
+ * berguna untuk pengujian: Latihan 3-4 meminta kalian membuktikan
+ * perilaku 504/502 dengan upstream yang sengaja salah/lambat, tanpa
+ * harus menunggu jikan yang sedang beneran error.
+ */
+const UPSTREAM = process.env.UPSTREAM_ANIME || "https://api.jikan.moe/v4/anime";
 
 /**
  * KONTRAK FIELD — daftar ini adalah perjanjian kita dengan consumer.

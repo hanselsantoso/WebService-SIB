@@ -20,7 +20,7 @@
 const Sequelize = require("sequelize");
 
 const sequelize = new Sequelize(
-  process.env.DB_NAME || "soa_minggu4",
+  process.env.DB_NAME || "soa_minggu5",
   process.env.DB_USER || "root",
   process.env.DB_PASSWORD || "",
   {
@@ -67,7 +67,7 @@ const testConnection = async () => {
   try {
     await sequelize.authenticate();
     console.log(
-      `[DB] Terhubung ke MySQL "${process.env.DB_NAME || "soa_minggu4"}" (via Sequelize)`
+      `[DB] Terhubung ke MySQL "${process.env.DB_NAME || "soa_minggu5"}" (via Sequelize)`
     );
   } catch (err) {
     console.error("[DB] GAGAL terhubung ke MySQL:", err.message);
