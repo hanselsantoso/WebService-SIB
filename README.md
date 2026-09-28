@@ -47,7 +47,7 @@ Setiap folder minggu (`w1`, `w2`, ...) punya struktur yang sama:
 | 2 | REST service dasar dengan Express | [`w2/`](w2/) |
 | 3 | REST service dengan MySQL | [`w3/`](w3/) |
 | 4 | ORM — model & relasi Sequelize | [`w4/`](w4/) |
-| 5 | Form validation dengan Joi | *(menyusul)* |
+| 5 | Form validation dengan Joi | [`w5/`](w5/) |
 | 6 | 3rd party API dengan axios | *(menyusul)* |
 | 7 | Auth & middleware dengan JWT | *(menyusul)* |
 | — | **UTS** | |
