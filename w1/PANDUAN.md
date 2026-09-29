@@ -85,7 +85,7 @@ Coba ketiga endpoint demo di Postman:
 Buka di browser:
 
 ```text
-https://api.jikan.moe/v4/anime?q=jojo&limit=3
+https://kitsu.io/api/edge/anime?filter%5Btext%5D=jojo&page%5Blimit%5D=3
 ```
 
 Tidak ada halaman — hanya JSON. **Itulah web service.** Buka DevTools →

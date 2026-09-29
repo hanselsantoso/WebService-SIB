@@ -2,9 +2,9 @@
  * ROUTES CONTOH AXIOS — MINGGU 6
  * ==============================
  *
- * Resource "contohAxios": perantara ke API pihak ketiga (jikan.moe).
+ * Resource "contohAxios": perantara ke API pihak ketiga (Kitsu).
  * URL-nya tetap milik KITA — consumer tidak perlu tahu upstream kita
- * siapa. Kalau suatu hari jikan diganti API lain, URL dan kontrak
+ * siapa. Kalau suatu hari Kitsu diganti API lain, URL dan kontrak
  * response tidak berubah; yang berubah hanya controller ini.
  */
 

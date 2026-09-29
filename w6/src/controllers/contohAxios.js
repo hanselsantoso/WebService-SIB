@@ -3,22 +3,22 @@
  * ==================================
  *
  * Selama lima minggu service kita hanya MELAYANI. Minggu ini ia juga
- * MENGINJAK — memanggil API orang lain (jikan.moe), dan itu mengubah
+ * MENGINJAK -- memanggil API orang lain (Kitsu), dan itu mengubah
  * sesuatu yang fundamental: sekarang ada dependensi yang tidak kita
  * kendalikan, tidak bisa kita perbaiki, dan tidak bisa kita percepat.
  *
  * Tiga pelajaran di controller ini, berurutan:
  *
- *   1. KONTRAK MILIK KITA — response jikan tidak diteruskan mentah.
+ *   1. KONTRAK MILIK KITA -- response Kitsu tidak diteruskan mentah.
  *      Kita memilih delapan field, dan consumer HANYA bergantung pada
- *      delapan field itu. Kalau jikan mengubah payload-nya besok,
- *      yang kita perbaiki satu tempat di sini.
+ *      delapan field itu. Kalau Kitsu mengubah payload-nya besok, yang
+ *      kita perbaiki satu tempat di sini.
  *
- *   2. NULL-SAFE — field opsional upstream (trailer sering null) tidak
- *      boleh menjatuhkan service kita. `?.` dan `?? null` ada untuk data
- *      yang bukan buatan kita.
+ *   2. NULL-SAFE -- field opsional upstream (trailer, rating, jumlah
+ *      episode sering null) tidak boleh menjatuhkan service kita.
+ *      `?.` dan `?? null` ada untuk data yang bukan buatan kita.
  *
- *   3. GAGAL DENGAN SOPAN — upstream timeout -> 504, upstream error ->
+ *   3. GAGAL DENGAN SOPAN -- upstream timeout -> 504, upstream error ->
  *      502, kesalahan kita -> 500. Dan TIDAK PERNAH menunggu selamanya:
  *      `timeout: 5000` wajib.
  */
@@ -29,46 +29,62 @@ const { kirimNotifikasi } = require("../utils/notifikasi");
  * Upstream bisa dioverride lewat .env (UPSTREAM_ANIME=...) --
  * berguna untuk pengujian: Latihan 3-4 meminta kalian membuktikan
  * perilaku 504/502 dengan upstream yang sengaja salah/lambat, tanpa
- * harus menunggu jikan yang sedang beneran error.
+ * harus menunggu upstream asli yang sedang error.
  */
-const UPSTREAM = process.env.UPSTREAM_ANIME || "https://api.jikan.moe/v4/anime";
+const UPSTREAM = process.env.UPSTREAM_ANIME || "https://kitsu.io/api/edge/anime";
 
 /**
- * KONTRAK FIELD — daftar ini adalah perjanjian kita dengan consumer.
+ * KONTRAK FIELD -- daftar ini adalah perjanjian kita dengan consumer.
  * Test Postman "returns only the fields we promised" menegakkannya.
- * Field di luar daftar ini TIDAK BOLEH bocor ke response — itu pula
+ * Field di luar daftar ini TIDAK BOLEH bocor ke response -- itu pula
  * yang membuat upstream bebas mengubah payload-nya sendiri.
+ *
+ * Nama fieldnya sengaja NETRAL terhadap upstream ("title", bukan
+ * "canonicalTitle") supaya suatu hari berganti API pun kontrak tidak
+ * berubah. Inilah bedanya antarmuka dan implementasi.
  */
 const KONTRAK_ANIME = ["mal_id", "url", "title", "trailer", "type", "episodes", "status", "rating"];
 
 /**
  * Upstream -> kontrak kita. Satu-satunya tempat yang tahu bentuk
- * payload jikan.
+ * payload Kitsu: data[i].attributes (JSON:API).
  */
 const petakanKeKontrak = (item) => ({
-  mal_id: item.mal_id,
-  url: item.url,
-  title: item.title,
-  // Trailer sering null di jikan. `item.trailer.url` tanpa `?.` =
-  // "Cannot read property 'url' of null" -> 500 untuk data yang bukan
+  mal_id: item.id,
+  url: `https://kitsu.io/anime/${item.attributes?.slug ?? item.id}`,
+  title: item.attributes?.canonicalTitle ?? null,
+  // Tidak semua anime punya trailer. `youtubeVideoId` tanpa `?.` =
+  // "Cannot read property ... of null" -> 500 untuk data yang bukan
   // salah kita. Optional chaining + nullish coalescing: ?. dan ?? null.
-  trailer: item.trailer?.url ?? null,
-  type: item.type,
-  episodes: item.episodes,
-  status: item.status,
-  rating: item.rating,
+  trailer: item.attributes?.youtubeVideoId
+    ? `https://youtu.be/${item.attributes.youtubeVideoId}`
+    : null,
+  type: item.attributes?.subtype ?? null,
+  episodes: item.attributes?.episodeCount ?? null,
+  status: item.attributes?.status ?? null,
+  rating: item.attributes?.ageRating ?? null,
 });
+
+/**
+ * Susun parameter untuk Kitsu dari query consumer.
+ *
+ * Consumer kita mengirim ?q= &limit= -- NAMA MILIK KITA. Nama parameter
+ * upstream (filter[text], page[limit]) disembunyikan di sini. Kalau
+ * besok upstream ganti nama parameternya, consumer TIDAK ikut rusak.
+ */
+const susunParams = ({ q, limit, page }) => {
+  const params = { "page[limit]": Math.min(Number(limit) || 3, 20) };
+  if (page) params["page[offset]"] = (Number(page) - 1) * Number(params["page[limit]"] || 3);
+  if (q) {
+    params["filter[text]"] = q;
+  } else {
+    params.sort = "-userCount"; // tanpa kata kunci -> anime paling populer
+  }
+  return params;
+};
 
 /* ================================================================== */
 /* GET /api/v1/contohAxios?q=jojo&limit=3                              */
-/*                                                                     */
-/* Upstream publik SANGGUP menggagalkan kita: jikan sesekali menjawab  */
-/* 5xx (gateway-nya tersendat, bukan salah kita). Maka: SATU kali      */
-/* retry untuk 5xx saja.                                               */
-/*                                                                     */
-/* Kenapa HANYA 5xx? Ulangi permintaan yang salah (4xx) tidak akan      */
-/* berubah jadi benar -- bad request tetap bad request. Yang boleh      */
-/* dicoba lagi adalah kegagalan SEMENTARA, dan 5xx itulah.             */
 /* ================================================================== */
 const queryAnime = async (req, res) => {
   let perintah;
@@ -77,12 +93,10 @@ const queryAnime = async (req, res) => {
     for (let percobaan = 1; percobaan <= 2; percobaan++) {
       try {
         perintah = await axios.get(UPSTREAM, {
-          // Forward query string pemanggil: ?q= &limit= &page= ...
-          // Consumer kita memfilter anime TANPA perlu tahu nama parameter
-          // jikan -- tapi karena kita meneruskan apa adanya, mereka
-          // (untuk saat ini) sama saja. Kontrak eksplisit lebih baik;
-          // itulah Latihan 2.
-          params: req.query,
+          // HANYA parameter yang kita kenali yang diteruskan -- field
+          // query asing dari consumer dibuang (prinsip yang sama dengan
+          // pertahanan mass assignment, tapi untuk query string).
+          params: susunParams(req.query),
 
           // WAJIB. Tanpa timeout, axios menunggu SELAMANYA -- upstream
           // yang menggantung memegang request kita terbuka, cukup banyak
@@ -101,7 +115,7 @@ const queryAnime = async (req, res) => {
       }
     }
 
-    const data = perintah.data.data; // axios membungkus di .data, jikan juga
+    const data = perintah.data.data; // axios membungkus di .data, Kitsu juga
     const hasil = data.map(petakanKeKontrak);
 
     return res.status(200).json({ total: hasil.length, data: hasil });

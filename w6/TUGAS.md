@@ -31,14 +31,17 @@ catat perilakunya, kembalikan semua perubahan:
 
 ### Latihan 2 — Kontrak eksplisit, bukan passthrough
 
-Saat ini `params: req.query` meneruskan SEMUA query ke jikan — artinya
-consumer kita menulis parameter milik jikan (`q`, `limit`, `sfw`, `order`,
-...). Perbaiki: terima hanya `q`, `limit`, `page` dari consumer, abaikan
-sisanya, kirim ke jikan dengan nama yang benar.
+Starter ini SUDAH memisahkan nama parameter kita (`q`, `limit`, `page`)
+dari nama parameter upstream (`filter[text]`, `page[limit]`) lewat
+`susunParams()`. Tugas kalian di latihan ini: tambahkan DUA parameter baru
+milik kalian sendiri — misalnya `?min_episode=` (filter sisi server: buang
+item dengan episode di bawah nilai itu, TANPA bertanya ke upstream lagi)
+dan `?urutkan=judul|rating` (urutkan hasil di controller). Upstream tidak
+perlu tahu keduanya ada.
 
-**Tulis di `LATIHAN.md`:** satu paragraf — kenapa meneruskan `req.query`
-apa adanya membuat kontrak kita palsu? (petunjuk: kalau jikan mengganti
-nama parameternya, siapa yang rusak?)
+**Tulis di `LATIHAN.md`:** satu paragraf — kenapa nama parameter consumer
+harus berbeda dari nama parameter upstream? (petunjuk: kalau Kitsu mengganti
+nama parameternya, siapa yang rusak — dan berapa file yang berubah?)
 
 ### Latihan 3 — 504, dibuktikan
 
@@ -48,7 +51,7 @@ status code dan pesannya. Kembalikan ke 5000. Satu kalimat: kenapa ini
 
 ### Latihan 4 — 502, dibuktikan
 
-Ganti `UPSTREAM` sementara menjadi `https://api.jikan.moe/v4/endpoint-salah`.
+Ganti `UPSTREAM` sementara menjadi `https://kitsu.io/api/edge/endpoint-salah`.
 Panggil endpoint. Catat status code dan pesannya. Kembalikan. Satu kalimat:
 kenapa `502` dan bukan `404` — siapa yang sebenarnya salah?
 
@@ -79,13 +82,20 @@ git diff --cached | grep -iE "api[_-]?key|token|secret"
 # kosong
 ```
 
-### Latihan 7 — Menelusuri jalur 429
+### Latihan 7 — Menelusuri jalur 429, secara deterministik
 
-Panggil `GET /api/v1/contohAxios?q=jojo` berkali-kali sangat cepat
-(Postman Runner, 20 iterasi, delay 0) sampai jikan mengembalikan 429.
-Catat status code yang diterima consumer dan pesannya. Minggu 8 kalian
-ada di sisi sebaliknya — catat bagaimana RASA-nya menjadi client yang
-kena limit.
+Menunggu upstream asli mengirim 429 itu belum tentu mungkin (limit Kitsu
+longgar). Jadikan deterministik dengan mock lokal:
+
+```bash
+node -e "require('http').createServer((q,s)=>{s.writeHead(429);s.end('limit')}).listen(4599)"
+```
+
+Lalu di `.env`: `UPSTREAM_ANIME=http://localhost:4599`, restart, dan
+panggil endpoint. Catat status code yang diterima consumer dan pesannya.
+Kembalikan `.env`. Minggu 8 kalian ada di sisi sebaliknya — catat bagaimana
+RASA-nya menjadi client yang kena limit, dan kenapa response 429 kita
+menyertakan pesan (ide: header `Retry-After`, dipakai lagi Minggu 8).
 
 ### Latihan 8 — Refleksi
 
@@ -95,7 +105,7 @@ Tulis jawabannya di `LATIHAN.md`:
    minta field `studios`, apa yang harus berubah — dan apa yang TIDAK
    boleh berubah?
 2. Kenapa kegagalan webhook sengaja "ditelan diam-diam" sedangkan
-   kegagalan upstream jikan dilaporkan dengan 502/504? Kapan menelan
+   kegagalan upstream Kitsu dilaporkan dengan 502/504? Kapan menelan
    error itu salah?
 3. `timeout` mencegah outage yang bukan salah kita. Contoh nyata lain
    di mana "salah orang lain tapi tetap tanggung"?

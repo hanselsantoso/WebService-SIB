@@ -2,7 +2,7 @@
   "info": {
     "_postman_id": "e273d704-5141-43fa-810f-2517bd6f8dea",
     "name": "SOA Minggu 6 - 3rd Party API Axios",
-    "description": "# SOA Minggu 6 — Koleksi Praktikum (3rd Party API dengan Axios)\n\nEndpoint buku tidak berubah dari Minggu 2-5. Yang baru: service kita juga menjadi CLIENT — memanggil API pihak ketiga (jikan.moe) lewat axios, meresponse-nya sesuai KONTRAK kita sendiri, dan gagal dengan sopan saat upstream gagal (504 timeout, 502 upstream error, 429 rate limit diteruskan).\n\nFolder **5 - ContohAxios** berisi 4 request baru.\n\n## Menjalankan\n\n```bash\ncd w6\nnpm install\ncp .env.example .env\nnpm run db:migrate\nnpm run dev\n```\n\nLalu Run koleksi ini dengan environment `local`. Butuh koneksi internet untuk folder ContohAxios — upstream-nya jikan.moe.",
+    "description": "# SOA Minggu 6 — Koleksi Praktikum (3rd Party API dengan Axios)\n\nEndpoint buku tidak berubah dari Minggu 2-5. Yang baru: service kita juga menjadi CLIENT — memanggil API pihak ketiga (Kitsu) lewat axios, meresponse-nya sesuai KONTRAK kita sendiri, dan gagal dengan sopan saat upstream gagal (504 timeout, 502 upstream error, 429 rate limit diteruskan).\n\nFolder **5 - ContohAxios** berisi 4 request baru.\n\n## Menjalankan\n\n```bash\ncd w6\nnpm install\ncp .env.example .env\nnpm run db:migrate\nnpm run dev\n```\n\nLalu Run koleksi ini dengan environment `local`. Butuh koneksi internet untuk folder ContohAxios — upstream-nya Kitsu.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
@@ -1321,7 +1321,7 @@
     },
     {
       "name": "5 - ContohAxios (Minggu 6)",
-      "description": "Service kita sebagai CLIENT: memanggil API pihak ketiga (jikan.moe) lewat axios. Perhatikan tiga hal di response: (1) field-nya adalah KONTRAK KITA — bukan payload mentah upstream, (2) field opsional aman dari null, (3) upstream yang gagal menjadi 502/504, bukan 500.",
+      "description": "Service kita sebagai CLIENT: memanggil API pihak ketiga (Kitsu) lewat axios. Perhatikan tiga hal di response: (1) field-nya adalah KONTRAK KITA — bukan payload mentah upstream, (2) field opsional aman dari null, (3) upstream yang gagal menjadi 502/504, bukan 500.",
       "item": [
         {
           "name": "Cari anime",
@@ -1347,7 +1347,7 @@
                 }
               ]
             },
-            "description": "Query diteruskan ke upstream: ?q=jojo&limit=3. Response memuat HANYA delapan field kontrak kita — synopsis, studio, dan puluhan field lain milik jikan TIDAK ikut."
+            "description": "Query diteruskan ke upstream: ?q=jojo&limit=3. Response memuat HANYA delapan field kontrak kita — synopsis, studio, dan puluhan field lain milik upstream TIDAK ikut. Tanpa `q`, endpoint mengembalikan anime paling populer."
           },
           "response": [],
           "event": [

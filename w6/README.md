@@ -4,7 +4,7 @@ Starter praktikum Mata Kuliah Arsitektur Berbasis Layanan (SOA)
 S1 Sistem Informasi Bisnis — ISTTS
 
 Lanjutan dari Minggu 5: endpoint buku tidak berubah. Yang baru — service
-kita menjadi **client**: memanggil API pihak ketiga (jikan.moe) dengan
+kita menjadi **client**: memanggil API pihak ketiga (Kitsu) dengan
 axios, meresponse-nya sesuai kontrak sendiri, dan gagal dengan sopan saat
 upstream gagal. Butuh **koneksi internet** untuk endpoint baru ini.
 
@@ -31,7 +31,7 @@ npx newman run postman/SOA-Minggu6.postman_collection.json \
 ```
 
 Folder lama hijau seperti Minggu 5; folder baru **5 - ContohAxios**
-butuh internet (upstream jikan.moe).
+butuh internet (upstream Kitsu).
 
 ## Daftar endpoint
 
@@ -53,7 +53,7 @@ Endpoint buku sama persis dengan Minggu 5; yang baru ditandai:
 | PATCH | `/api/v1/buku/:bukuId` | ubah sebagian |
 | DELETE | `/api/v1/buku/:bukuId` | hapus |
 | GET | `/api/v1/buku/:bukuId/karakter/:karakterId?` | nested resource |
-| **GET** | **`/api/v1/contohAxios?q=jojo&limit=3`** | **caria anime via jikan.moe (Minggu 6)** |
+| **GET** | **`/api/v1/contohAxios?q=jojo&limit=3`** | **cari anime via Kitsu (Minggu 6)** |
 | **POST** | **`/api/v1/contohAxios/webhook`** | **latihan webhook — `{ pesan }` (Minggu 6)** |
 
 Method lain pada path di atas menghasilkan **405** beserta header `Allow`.
@@ -71,6 +71,6 @@ Latihan dan tugas yang dikumpulkan ada di **[TUGAS.md](TUGAS.md)**.
 - Node 24 LTS · Express 4 · Sequelize 6 · Joi 17 — sama seperti sebelumnya.
 - **Axios 1** — klien HTTP untuk panggilan keluar. Satu-satunya dependensi
   baru minggu ini.
-- Upstream contoh: `api.jikan.moe` (tanpa key, ideal untuk belajar).
+- Upstream contoh: `kitsu.io/api/edge` (tanpa key, ideal untuk belajar).
   Di project kalian nanti: API dengan key, agar latihan pengelolaan
   rahasianya nyata.
