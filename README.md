@@ -49,7 +49,7 @@ Setiap folder minggu (`w1`, `w2`, ...) punya struktur yang sama:
 | 4 | ORM — model & relasi Sequelize | [`w4/`](w4/) |
 | 5 | Form validation dengan Joi | [`w5/`](w5/) |
 | 6 | 3rd party API dengan axios | [`w6/`](w6/) |
-| 7 | Auth & middleware dengan JWT | *(menyusul)* |
+| 7 | Auth & middleware dengan JWT | [`w7/`](w7/) |
 | — | **UTS** | |
 | 8 | Business model — API key & rate limit | *(menyusul)* |
 | 9 | Database migration | *(menyusul)* |
