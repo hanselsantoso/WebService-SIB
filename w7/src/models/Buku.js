@@ -164,9 +164,9 @@ module.exports = (sequelize, DataTypes) => {
 
       // TIMESTAMPS — otomatis mengisi kolom createdAt dan updatedAt.
       // Sequelize versi default kita juga menunggu kolom `deletedAt`
-      // (paranoid / soft delete). Di STARTER ini paranoid SENGAJA mati
-      // agar DELETE benar-benar menghapus, seperti Minggu 3. Menyalakannya
-      // adalah Latihan 5 — termasuk konsekuensi menariknya terhadap
+      // (paranoid / soft delete). Di starter ini paranoid sengaja mati agar DELETE tetap menghapus
+      // baris secara permanen, seperti implementasi sebelumnya. Mengaktifkan
+      // soft delete berdampak juga pada
       // UNIQUE KEY judul.
       timestamps: true,
       paranoid: false,

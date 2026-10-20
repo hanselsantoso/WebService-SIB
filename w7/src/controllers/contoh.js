@@ -153,7 +153,7 @@ const contohArrayFunction = (req, res) => {
  * 5. VALIDASI JOI — DEMO MINGGU 5
  *    POST /api/v1/contoh/validasi
  *
- *    Endpoint ini TIDAK menyentuh database. Tugasnya satu: menunjukkan
+ *    Endpoint ini TIDAK menyentuh database. Tujuannya: menunjukkan
  *    semua kemampuan Joi lewat userSchema (lihat src/utils/validation/
  *    userSchema.js) — label & pesan Indonesia, pattern regex, Joi.ref,
  *    default, dan aturan lintas-field (.with).

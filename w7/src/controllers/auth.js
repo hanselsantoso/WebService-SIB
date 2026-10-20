@@ -108,8 +108,7 @@ const register = async (req, res) => {
     // dataValues-nya LENGKAP -- termasuk hash password! defaultScope
     // hanya menyaring hasil SELECT (findByPk/findAll), bukan hasil
     // create. Karena itu kita re-fetch: findByPk memakai scope, dan
-    // hash tidak pernah keluar. (Latihan 1 no. 1: hapus re-fetch ini
-    // dan lihat hash di response -- bug keamanan yang nyata.)
+    // hash tidak pernah keluar. (re-fetch ini mencegah hash masuk ke response.)
     const aman = await Pengguna.findByPk(hasil.id);
 
     return res.status(201).json(aman);
@@ -162,8 +161,7 @@ const login = async (req, res) => {
   }
 
   // Payload yang DITANDATANGANI -- sengaja minimal. INGAT: payload JWT
-  // bisa dibaca siapa pun yang memegang token (Latihan 2 membuktikan
-  // dengan mata kepala sendiri).
+  // bisa dibaca siapa pun yang memegang token.
   const payload = {
     pengguna: {
       id: pengguna.id,
@@ -237,10 +235,10 @@ const logout = (req, res) => {
     secure: process.env.NODE_ENV === "production",
   });
   return res.status(200).json({ msg: "Berhasil logout" });
-  // CATATAN JUJUR: ini hanya menghapus cookie di client. Token yang
-  // sudah terbit tetap valid sampai kedaluwarsa -- JWT tidak punya
-  // "ingatan" siapa yang sudah logout. Cara benarnya (Latihan 5):
-  // simpan refresh token di DB dan tolak token yang sudah dicabut.
+  // Ini hanya menghapus cookie di client. Token yang sudah terbit tetap
+  // valid sampai kedaluwarsa -- JWT tidak punya "ingatan" siapa yang
+  // sudah logout. Pencabutan sungguhan memerlukan penyimpanan token di
+  // server (mis. database atau denylist).
 };
 
 /* ================================================================== */

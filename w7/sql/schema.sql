@@ -8,7 +8,7 @@
 --
 --   createdAt  — kapan baris dibuat        (otomatis oleh Sequelize)
 --   updatedAt  — kapan terakhir diubah     (otomatis oleh Sequelize)
---   deletedAt  — kapan dihapus (soft delete) — dipakai di Latihan 5,
+--   deletedAt  — kapan dihapus (soft delete), tersedia untuk model paranoid,
 --                saat kalian menyalakan `paranoid: true`.
 --
 -- Jalankan file ini via `npm run db:migrate` (scripts/migrate.js).
@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS karakter (
 ) ENGINE=InnoDB;
 
 -- ------------------------------------------------------------
--- Tabel untuk LATIHAN 6 (migrasi resource `penulis` ke ORM).
+-- Tabel `penulis` dipertahankan dari schema praktikum sebelumnya.
 -- ------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS penulis (
   id            INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,

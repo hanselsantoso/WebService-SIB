@@ -27,9 +27,8 @@ const { kirimNotifikasi } = require("../utils/notifikasi");
 
 /**
  * Upstream bisa dioverride lewat .env (UPSTREAM_ANIME=...) --
- * berguna untuk pengujian: Latihan 3-4 meminta kalian membuktikan
- * perilaku 504/502 dengan upstream yang sengaja salah/lambat, tanpa
- * harus menunggu upstream asli yang sedang error.
+ * berguna untuk demonstrasi 504/502 dengan upstream yang sengaja
+ * salah/lambat, tanpa menunggu upstream asli yang sedang error.
  */
 const UPSTREAM = process.env.UPSTREAM_ANIME || "https://kitsu.io/api/edge/anime";
 

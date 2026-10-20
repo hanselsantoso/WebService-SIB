@@ -7,7 +7,7 @@
  *
  *   const { bukuSchema, userSchema } = require("../utils/validation");
  *
- * Tambah schema baru (tugas: kendaraan, pelanggan, transaksi) dengan cara:
+ * Tambah schema baru untuk resource project dengan cara:
  *   1. buat file di folder ini
  *   2. require + ekspor di bawah
  */

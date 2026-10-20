@@ -16,7 +16,7 @@
  *      konsumen (dan koleksi Postman) sudah kenal.
  *   2. opsi abortEarly: false cukup ditulis sekali di sini.
  *   3. PATCH butuh schema parsial — logikanya satu tempat, dipakai semua
- *      resource (buku, lalu tugas: kendaraan, pelanggan, transaksi).
+ *      resource project yang sudah ada.
  */
 const Joi = require("joi");
 

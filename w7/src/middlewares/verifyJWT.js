@@ -43,11 +43,10 @@ const verifyJWT = (req, res, next) => {
       return res.status(403).json({ msg: "Token tidak valid" });
     }
 
-    // Teruskan identitas ke controller lewat req -- pola yang sama
-    // dengan Minggu 4, saat model "menempelkan" dirinya ke request.
+    // Teruskan identitas ke controller lewat req.
     // Isi payload sengaja MINIMAL: id, nama, roles. Jangan pernah
     // menyimpan password/hash di dalam JWT -- payload JWT bisa dibaca
-    // siapa pun yang memegang token (lihat Latihan 2).
+    // siapa pun yang memegang token.
     req.pengguna = decoded.pengguna;
     next();
   });

@@ -3,9 +3,10 @@
 Starter praktikum Mata Kuliah Arsitektur Berbasis Layanan (SOA)
 S1 Sistem Informasi Bisnis — ISTTS
 
-Minggu ini menambahkan registrasi, login, access token JWT, refresh token
-di cookie `httpOnly`, dan middleware autentikasi/otorisasi. Materi lengkap
-ada di **[PANDUAN.md](PANDUAN.md)**.
+Minggu ini melanjutkan project semester dengan registrasi, login, access
+token JWT, refresh token di cookie `httpOnly`, dan middleware
+autentikasi/otorisasi. Tidak ada tugas atau project terpisah. Materi ada di
+**[PANDUAN.md](PANDUAN.md)**.
 
 ## Menjalankan
 
@@ -57,8 +58,8 @@ npx newman run postman/SOA-Minggu7.postman_collection.json \
 | GET | `/api/v1/pengguna/profil` | contoh route dengan `verifyJWT` |
 
 Endpoint minggu sebelumnya tetap sama dan tetap tanpa autentikasi, supaya
-koleksi Postman lama tidak berubah. Melindungi endpoint bisnis adalah
-bagian latihan mahasiswa.
+koleksi Postman lama tidak berubah. Middleware minggu ini dipakai untuk
+melindungi endpoint project yang sudah ada sesuai aturan bisnisnya.
 
 ## Catatan keamanan
 

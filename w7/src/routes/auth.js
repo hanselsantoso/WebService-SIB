@@ -29,8 +29,8 @@ router.route("/logout").post(asyncHandler(logout)).all(methodNotAllowed("POST"))
  *   verifyJWT dulu ("kamu siapa?" -> req.pengguna terisi),
  *   baru checkRoles ("kamu boleh?" -> membaca req.pengguna.roles).
  *
- * Coba sendiri di Latihan 1 no. 4: tukar urutannya dan amati
- * error "Cannot read property 'roles' of undefined".
+ * checkRoles membaca req.pengguna.roles yang disiapkan verifyJWT;
+ * urutan middleware karena itu wajib.
  * ------------------------------------------------------------------ */
 router
   .route("/rahasia")

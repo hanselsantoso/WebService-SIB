@@ -2,7 +2,7 @@
   "info": {
     "_postman_id": "04c33a2b-50ec-4f0e-a286-d08c43dd7d18",
     "name": "SOA Minggu 7 - Auth & Middleware JWT",
-    "description": "# SOA Minggu 7 — Koleksi Praktikum (Auth & Middleware JWT)\n\nEndpoint buku tidak berubah (sengaja dibiarkan TERBUKA — melindunginya adalah TUGAS Latihan 4). Yang baru: register/login/refresh/logout, middleware `verifyJWT` dan `checkRoles`, serta dua route terproteksi contoh.\n\nKredensial admin dari seed: **admin / Admin123!**\n\n## Menjalankan\n\n```bash\ncd w7\nnpm install\ncp .env.example .env   # ISI KEDUA SECRET (acak, berbeda)\nnpm run db:migrate\nnpm run dev\n```\n\nGenerate secret:\n```bash\nnode -e \"console.log(require('crypto').randomBytes(64).toString('hex'))\"\n```",
+    "description": "# SOA Minggu 7 — Koleksi Praktikum (Auth & Middleware JWT)\n\nEndpoint buku sebelumnya tetap tersedia. Materi minggu ini melanjutkan project semester: register/login/refresh/logout, middleware `verifyJWT` dan `checkRoles`, serta dua route terproteksi contoh. Terapkan middleware pada route project sesuai aturan bisnis yang sudah ada.\n\nKredensial admin development dari seed: **admin / Admin123!**. Jangan gunakan kredensial demo ini di deployment.\n\n## Menjalankan\n\n```bash\ncd w7\nnpm install\ncp .env.example .env   # isi dua secret acak yang berbeda\nnpm run db:migrate\nnpm run dev\n```\n\nGenerate tiap secret:\n```bash\nnode -e \"console.log(require('crypto').randomBytes(64).toString('hex'))\"\n```",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
@@ -811,7 +811,7 @@
                 "{{bukuId}}"
               ]
             },
-            "description": "**PUT** `/api/v1/buku/{{bukuId}}`\n\n**Body — sengaja cuma satu field:**\n```json\n{ \"judul\": \"Cuma Judul\" }\n```\n\nEkspektasi: `400`. PUT menuntut representasi LENGKAP resource; mengirim sebagian saja dianggap data tidak lengkap, bukan \"update sebagian\" (itu tugas PATCH).",
+            "description": "**PUT** `/api/v1/buku/{{bukuId}}`\n\n**Body — sengaja cuma satu field:**\n```json\n{ \"judul\": \"Cuma Judul\" }\n```\n\nEkspektasi: `400`. PUT menuntut representasi LENGKAP resource; mengirim sebagian saja dianggap data tidak lengkap, bukan \"update sebagian\" (gunakan PATCH untuk perubahan parsial).",
             "body": {
               "mode": "raw",
               "raw": "{\n  \"judul\": \"Cuma Judul\"\n}",
@@ -1481,7 +1481,7 @@
                 "webhook"
               ]
             },
-            "description": "Kirim notifikasi keluar (fire-and-forget). Isi DISCORD_WEBHOOK_URL di .env untuk melihat pesannya di Discord. Kosong -> tetap 200, dilewati diam-diam. LATIHAN 5: rusak URL webhook, kirim lagi — tetap 200, bukan 500.",
+            "description": "Kirim notifikasi keluar (fire-and-forget). Isi DISCORD_WEBHOOK_URL di .env untuk melihat pesannya di Discord. Kosong -> tetap 200, dilewati diam-diam. Demonstrasi: rusak URL webhook lalu kirim ulang — tetap 200, bukan 500.",
             "body": {
               "mode": "raw",
               "raw": "{\n  \"pesan\": \"Tes webhook dari SOA Minggu 6\"\n}"
@@ -2013,7 +2013,7 @@
                 "logout"
               ]
             },
-            "description": "clearCookie refreshToken. CATATAN JUJUR (di Latihan 5): token yang sudah terbit tetap valid sampai kedaluwarsa — JWT tidak punya ingatan siapa yang logout.",
+            "description": "clearCookie refreshToken. CATATAN JUJUR: token yang sudah terbit tetap valid sampai kedaluwarsa — JWT tidak punya ingatan siapa yang logout.",
             "auth": {
               "type": "noauth"
             }

@@ -142,8 +142,7 @@ bug XSS di frontend tidak bisa mencuri refresh token. Access token
 pendek hidup di memori; yang panjang umur yang dilindungi rapat.
 
 Perhatikan dua SECRET berbeda — kalau satu secret dipakai dua-duanya,
-refresh token bisa di-replay sebagai access token. (Celahnya dibuktikan
-di TUGAS Latihan 1 no. 5.)
+refresh token bisa di-replay sebagai access token.
 
 ## 5. Middleware: verifyJWT
 
@@ -189,9 +188,10 @@ Perhatikan perbedaan pemanggilannya: `verifyJWT` diletakkan, sedangkan
 yang mengembalikan middleware. Satu fungsi, dikonfigurasi per route.
 
 Dan urutannya TIDAK BOLEH terbalik: `checkRoles` membaca
-`req.pengguna.roles` yang diisi `verifyJWT`. Terbalik =
+`req.pengguna.roles` yang diisi `verifyJWT`. Middleware ini harus dipasang setelah `verifyJWT`, karena ia membaca
+`req.pengguna.roles` yang diisi sebelumnya. Urutan salah memunculkan
 `Cannot read property 'roles' of undefined` — error klasik, dibuktikan
-di Latihan 1 no. 4.
+karena `checkRoles` membaca `req.pengguna.roles` yang disiapkan middleware sebelumnya.
 
 ## 7. 401 dan 403: dua pertanyaan berbeda
 
@@ -233,7 +233,16 @@ Hal yang sama berlaku di sisi register: payload yang menyertakan
 sendiri: login admin lalu coba register dengan roles — kolom `roles`
 tidak pernah muncul dari body.
 
-## 9. Troubleshooting
+## 9. Melanjutkan project semester
+
+Materi minggu ini dipakai untuk menambahkan autentikasi ke project rental
+yang sudah berjalan — tidak membuat project atau tugas terpisah. Integrasikan
+`register`/`login`, lalu pasang `verifyJWT` dan `checkRoles` pada route
+project yang sesuai. Pilih role berdasarkan aturan bisnis yang sudah ada.
+Endpoint dan collection project tetap menjadi sumber utama; jangan menyalin
+data atau membuat project baru.
+
+## 10. Troubleshooting
 
 | Gejala | Penyebab | Solusi |
 |---|---|---|
@@ -248,5 +257,3 @@ tidak pernah muncul dari body.
 | Token kedaluwarsa saat menguji | access token memang 30 detik | login lagi atau gunakan refresh flow |
 
 ---
-
-Latihan dan tugas yang dikumpulkan ada di file terpisah: [TUGAS.md](TUGAS.md).

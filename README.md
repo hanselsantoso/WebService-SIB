@@ -35,7 +35,7 @@ Setiap folder minggu (`w1`, `w2`, ...) punya struktur yang sama:
 |---|---|
 | `README.md` | Ringkasan: cara menjalankan, daftar endpoint, catatan versi |
 | `PANDUAN.md` | Cara install + penjelasan materi minggu tersebut |
-| `TUGAS.md` | Latihan dan tugas yang dikumpulkan (bila ada) |
+| `TUGAS.md` | Tugas minggu 2–6. Mulai minggu 7 tidak ada tugas terpisah; project semester dilanjutkan. |
 | `postman/` | Koleksi Postman untuk mengetes semua endpoint |
 | `src/` | Kode starter project |
 

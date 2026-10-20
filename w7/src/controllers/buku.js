@@ -179,8 +179,8 @@ const statistikBuku = async (req, res) => {
 const getSingleBuku = async (req, res) => {
   const buku = await getBukuLengkap(req.params.bukuId);
 
-  // findByPk + paranoid (kalau nyalakan di Latihan 5) otomatis
-  // menyembunyikan baris yang sudah soft-deleted — 404 tetap bekerja.
+  // findByPk + paranoid otomatis menyembunyikan baris yang sudah
+  // soft-deleted — 404 tetap bekerja.
   if (!buku) {
     return res
       .status(404)
@@ -248,7 +248,7 @@ const storeBuku = async (req, res) => {
     // Notifikasi webhook (Minggu 6) -- sengaja TIDAK di-await:
     // response 201 tidak perlu menunggu Discord. Kegagalannya ditangani
     // DI DALAM kirimNotifikasi -- buku tetap terbuat walau Discord down.
-    // Buktikan di Latihan 5: rusak URL webhook, POST lagi, tetap 201.
+    // Kegagalan webhook hanya dicatat di log; response create tetap 201.
     kirimNotifikasi(`Buku baru ditambahkan: ${bukuBaru.judul}`);
 
     return res
@@ -382,7 +382,7 @@ const deleteBuku = async (req, res) => {
   // destroy() = DELETE FROM buku WHERE id = ?. Baris karakter ikut
   // terhapus lewat ON DELETE CASCADE (MySQL), BUKAN lewat kode di sini.
   //
-  // Latihan 5 mengubah destroy() menjadi soft delete (paranoid: true):
+  // Dengan paranoid: true, destroy() menjadi soft delete:
   // satu baris di model, dan baris ini tidak lagi hilang — hanya
   // ditandai deletedAt. Konsekuensinya menarik, coba sendiri.
   await buku.destroy();

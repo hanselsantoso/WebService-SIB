@@ -54,9 +54,9 @@ INSERT INTO penulis (id, nama, negara, tahun_lahir) VALUES
 --   node -e "console.log(require('bcryptjs').hashSync('Admin123!', 10))"
 --
 -- Register sendiri di Postman menghasilkan role 'visitor' -- karena
--- ATURAN BISNIS: tidak boleh ada jalur API yang menciptakan admin.
--- Kalau admin bisa dibuat lewat POST, siapa pun jadi admin. (Lihat
--- TUGAS Latihan 1 no. 3.)
+-- ATURAN BISNIS: tidak ada jalur API yang menciptakan admin.
+-- Registrasi selalu memberi role visitor; admin hanya disediakan oleh
+-- seed development ini.
 -- ------------------------------------------------------------
 INSERT INTO pengguna (id, pengguna_nama, pengguna_jk, pengguna_password, roles, api_key) VALUES
   (1, 'admin', 'L', '$2a$10$isKcE3QfjHwpZep4IB77KOUKktGtIAM5knz6FLxxHACbNfugDh3US', 'admin', UUID());

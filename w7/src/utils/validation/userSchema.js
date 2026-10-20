@@ -5,7 +5,7 @@
  * Endpoint demo: POST /api/v1/contoh/validasi (lihat controllers/contoh.js).
  *
  * Bukan bagian dari resource buku — ini SATU endpoint yang memuat semua
- * fitur Joi yang akan kalian butuhkan di tugas dan di project:
+ * fitur Joi yang tetap dipakai di project semester:
  *
  *   .label()           nama field yang tampil di pesan error
  *   .messages()        pesan bahasa Indonesia per kode error
