@@ -112,13 +112,73 @@ Dua hal yang ditunjukkan di kelas:
 Salah kaprah paling penting untuk dibunuh minggu ini:
 
 ```text
-header.payload.signature   ← base64, BUKAN enkripsi
+base64url(header).base64url(payload).base64url(signature)
 ```
 
-Salin accessToken dari login, tempel ke jwt.io — SELURUH isi payload
-terbaca polos. Yang dilindungi token ini adalah **keutuhan**, bukan
-**rahasia**: ubah satu karakter → verifikasi gagal, tapi MEMBACANYA tidak
-butuh kunci apa pun.
+### Contoh isi access token project
+
+Ini contoh **decoded payload** memakai data fiktif. Bukan token aktif dan
+tidak punya signature yang dapat diverifikasi:
+
+```json
+{
+  "pengguna": {
+    "id": 1,
+    "pengguna_nama": "admin",
+    "roles": "admin"
+  },
+  "iat": 1792450000,
+  "exp": 1792450030
+}
+```
+
+Arti setiap bagian:
+
+| Claim | Arti | Sumber di project |
+|---|---|---|
+| `pengguna.id` | ID akun | `Pengguna.id` |
+| `pengguna.pengguna_nama` | Nama akun | `Pengguna.pengguna_nama` |
+| `pengguna.roles` | Hak akses yang dibawa token | `Pengguna.roles`; dibaca `checkRoles` |
+| `iat` | Waktu token diterbitkan (Unix seconds) | Dibuat otomatis oleh `jsonwebtoken` |
+| `exp` | Waktu token kedaluwarsa (Unix seconds) | `expiresIn: "30s"` pada access token |
+
+Header token project berisi algoritma dan tipe:
+
+```json
+{ "alg": "HS256", "typ": "JWT" }
+```
+
+Secara ringkas, token compact-nya berbentuk:
+
+```text
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.<payload-base64url>.<signature-base64url>
+```
+
+`<payload-base64url>` dan `<signature-base64url>` di atas placeholder,
+bukan bagian token yang bisa dipakai. Login mengembalikan access token
+sebagai JSON. Client mengirimkannya pada request berikutnya:
+
+```http
+Authorization: Bearer <accessToken>
+```
+
+Salin token hasil login dan decode bagian tengah (`payload`) di jwt.io atau
+secara lokal:
+
+```bash
+node -e "console.log(JSON.parse(Buffer.from(process.argv[1].split('.')[1], 'base64url').toString()))" '<accessToken>'
+```
+
+SELURUH payload terbaca tanpa secret. Yang dilindungi token ini adalah
+**keutuhan**, bukan **rahasia**: ubah satu karakter → verifikasi gagal,
+tetapi membacanya tidak butuh kunci apa pun. Signature HS256 dibuat dari
+header + payload memakai `ACCESS_TOKEN_SECRET`; server memverifikasinya
+sebelum mempercayai identitas dan role.
+
+Access dan refresh token membawa identitas minimal yang serupa, tetapi
+ditandatangani dengan **secret berbeda** dan punya expiry berbeda. Jangan
+pernah menaruh password, hash, API key, nomor kartu, atau data pribadi di
+payload JWT. Gunakan HTTPS saat token dikirim melalui jaringan.
 
 Konsekuensinya — dua aturan:
 
