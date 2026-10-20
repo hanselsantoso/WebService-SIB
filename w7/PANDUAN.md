@@ -154,8 +154,24 @@ Secara ringkas, token compact-nya berbentuk:
 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.<payload-base64url>.<signature-base64url>
 ```
 
-`<payload-base64url>` dan `<signature-base64url>` di atas placeholder,
-bukan bagian token yang bisa dipakai. Login mengembalikan access token
+Letak setiap bagian pada HTTP request jelasnya begini:
+
+```text
+HTTP request header:
+Authorization: Bearer <JWT>
+                └─────┘└───────────────────────────────────────────────────────────┘
+                 scheme   token UTUH: SEG1.SEG2.SEG3
+                          ├───┘      ├───┘   ├───┘
+                          header     payload  signature
+```
+
+Jangan tertukar: **HTTP header** bernama `Authorization`; **JWT header**
+adalah segmen pertama token, berisi `alg` dan `typ`. Kata `Bearer` bukan
+bagian token. Token adalah seluruh string setelahnya, termasuk dua titik.
+Signature adalah segmen ketiga di dalam token — bukan HTTP header terpisah.
+
+`<payload-base64url>` dan `<signature-base64url>` di contoh atas adalah
+placeholder, bukan token yang bisa dipakai. Login mengembalikan access token
 sebagai JSON. Client mengirimkannya pada request berikutnya:
 
 ```http
