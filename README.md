@@ -51,7 +51,7 @@ Setiap folder minggu (`w1`, `w2`, ...) punya struktur yang sama:
 | 6 | 3rd party API dengan axios | [`w6/`](w6/) |
 | 7 | Auth & middleware dengan JWT | [`w7/`](w7/) |
 | — | **UTS** | |
-| 8 | Business model — API key & rate limit | *(menyusul)* |
+| 8 | Business model — API key & rate limit | [`w8/`](w8/) |
 | 9 | Database migration | *(menyusul)* |
 | 10 | Dokumentasi Postman & automated testing | *(menyusul)* |
 | 11 | File upload dengan multer | *(menyusul)* |
