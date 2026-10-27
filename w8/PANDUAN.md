@@ -34,7 +34,7 @@ Prasyarat: Node 24, MySQL menyala, dan secret JWT dari Minggu 7 tersedia.
 npm install
 cp .env.example .env        # isi kredensial MySQL + dua secret JWT
 npm run db:migrate
-npm run dev                 # http://localhost:3001
+npm run dev                 # http://localhost:3002
 ```
 
 > **Peringatan data lokal:** `npm run db:migrate` menjalankan `seed.sql`

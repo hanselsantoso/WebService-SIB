@@ -19,6 +19,10 @@ npm run dev
 > `db:migrate` mengisi ulang data demo dan menghapus data latihan lokal.
 > Jangan jalankan terhadap database produksi atau data yang perlu dipertahankan.
 
+Untuk sesi berikutnya setelah setup awal: cukup `npm run dev`, lalu buka
+Postman dan pilih environment `local`. Starter W8 menggunakan port **3002**;
+base URL Postman sudah disetel ke `http://localhost:3002/api/v1`.
+
 ## Menguji
 
 Impor `postman/SOA-Minggu8.postman_collection.json` dan

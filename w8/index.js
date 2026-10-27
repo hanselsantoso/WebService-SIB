@@ -44,7 +44,7 @@ const {
 } = require("./src/routes");
 const { testConnection } = require("./src/databases/connection");
 
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 3002;
 
 /* ------------------------------------------------------------------ */
 /* 1. MIDDLEWARE GLOBAL                                                */
